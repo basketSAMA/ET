@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">ET</string>
+    <string name="app_name">Emo Tree</string>
+    <string name="label_positive">positive</string>
+    <string name="label_negative">negative</string>
 </resources>

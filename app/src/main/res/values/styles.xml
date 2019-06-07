@@ -5,4 +5,8 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="NewFont" parent="Theme.AppCompat.Light">
+        <item name="android:fontFamily">@font/newfont</item>
+    </style>
+
 </resources>
