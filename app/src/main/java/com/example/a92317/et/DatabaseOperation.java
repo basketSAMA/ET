@@ -25,6 +25,12 @@ public class DatabaseOperation {
         myDatabaseHelper.close();
     }
 
+    public void change(Emo emo) {
+        myDatabaseHelper.getWritableDatabase().execSQL("update Emo set label = ?, sentence = ?, time = ? where id = ?"
+                , new Object[]{ emo.getLabel(), emo.getSentence(), emo.getTime(), emo.getId() });
+        myDatabaseHelper.close();
+    }
+
     public Emo findById(Integer id) {
         Emo emo = null;
         Cursor cursor = myDatabaseHelper.getWritableDatabase().rawQuery("select * from Emo where id = ?"

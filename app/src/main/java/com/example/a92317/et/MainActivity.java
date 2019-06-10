@@ -2,10 +2,8 @@ package com.example.a92317.et;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -15,16 +13,15 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import jackmego.com.jieba_android.JiebaSegmenter;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -52,6 +49,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        JiebaSegmenter.init(this);
+
         databaseOperation = new DatabaseOperation(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.rv);
@@ -68,7 +67,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 .setView(et)
                                 .setTitle(" ")
                                 .setIcon(R.drawable.add)
-
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -76,7 +74,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                         Emo emo = new Emo();
                                         emo.setTime();
                                         emo.setSentence(sentence);
-                                        emo.setLabel(getString(R.string.label_positive));
+
+                                        Analysis analysis = new Analysis(JiebaSegmenter.getJiebaSegmenterSingleton(), sentence);
+                                        int score = analysis.emoScore();
+                                        if(score > 0)
+                                            emo.setLabel(getString(R.string.label_positive));
+                                        else
+                                            emo.setLabel(getString(R.string.label_negative));
                                         databaseOperation.save(emo);
                                         adapter.add(0, emo);
                                         recyclerView.scrollToPosition(0);
