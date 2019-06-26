@@ -1,8 +1,13 @@
 package com.example.a92317.et;
 
+import android.os.Environment;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,24 +17,30 @@ import jackmego.com.jieba_android.JiebaSegmenter;
 public class Analysis {
 
     private List<String> wordList;
+    private List<String> posDict;
+    private List<String> negDict;
+    private List<String> plusDict;
+    private List<String> noDict;
 
-    public Analysis(JiebaSegmenter jiebaSegmenter, String sentence) {
-        wordList = jiebaSegmenter.getDividedString(sentence);
-    }
-
-    public int emoScore() {
-        int score = 0;
-
-        String prefix = "E:\\AndroidProject\\ET\\app\\src\\main\\res\\dict\\";
+    public Analysis() {
+        String prefix = Environment.getExternalStorageDirectory().getPath() + "/ETdict/";
         String posPath = prefix + "pos.txt";
         String negPath = prefix + "neg.txt";
         String plusPath = prefix + "plus.txt";
         String noPath = prefix + "no.txt";
 
-        List<String> posDict = txt(posPath);
-        List<String> negDict = txt(negPath);
-        List<String> plusDict = txt(plusPath);
-        List<String> noDict = txt(noPath);
+        posDict = txt(posPath);
+        negDict = txt(negPath);
+        plusDict = txt(plusPath);
+        noDict = txt(noPath);
+    }
+
+    public void setWordList(JiebaSegmenter jiebaSegmenter, String sentence) {
+        wordList = jiebaSegmenter.getDividedString(sentence);
+    }
+
+    public int getEmoScore() {
+        int score = 0;
 
         for(int i=0;i<wordList.size();i++) {
             String word = wordList.get(i);
@@ -70,6 +81,7 @@ public class Analysis {
                 while ((lineTxt = br.readLine()) != null) {
                     if (!"".equals(lineTxt)) {
                         String reds = lineTxt.split("\\+")[0];  //java 正则表达式
+                        reds = reds.trim();
                         res.add(count, reds);
                         count++;
                     }

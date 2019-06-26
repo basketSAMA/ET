@@ -2,22 +2,31 @@ package com.example.a92317.et;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +41,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RecyclerView recyclerView;
     private Adapter adapter;
     private BoomMenuButton bmb;
+    private Analysis analysis;
 
     public enum Icon {
         positive(R.drawable.posi), negative(R.drawable.nega);
@@ -52,6 +62,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         JiebaSegmenter.init(this);
 
         databaseOperation = new DatabaseOperation(this);
+
+        analysis = new Analysis();
 
         recyclerView = (RecyclerView) findViewById(R.id.rv);
 
@@ -75,12 +87,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                         emo.setTime();
                                         emo.setSentence(sentence);
 
-                                        Analysis analysis = new Analysis(JiebaSegmenter.getJiebaSegmenterSingleton(), sentence);
-                                        int score = analysis.emoScore();
+                                        analysis.setWordList(JiebaSegmenter.getJiebaSegmenterSingleton(), sentence);
+                                        int score = analysis.getEmoScore();
+                                        //Toast.makeText(MainActivity.this, "score: " + score, Toast.LENGTH_LONG).show();
                                         if(score > 0)
+
                                             emo.setLabel(getString(R.string.label_positive));
                                         else
                                             emo.setLabel(getString(R.string.label_negative));
+
                                         databaseOperation.save(emo);
                                         adapter.add(0, emo);
                                         recyclerView.scrollToPosition(0);
