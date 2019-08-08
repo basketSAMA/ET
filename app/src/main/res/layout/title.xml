@@ -24,7 +24,7 @@
         android:id="@+id/title_question"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:text="❓"
+        android:text="?"
         android:background="@color/colorTransparent"
         android:textSize="20dp" />
 

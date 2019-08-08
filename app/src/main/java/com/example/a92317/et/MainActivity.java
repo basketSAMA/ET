@@ -2,13 +2,11 @@ package com.example.a92317.et;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,12 +19,6 @@ import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomMenuButton;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,9 +81,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                                         analysis.setWordList(JiebaSegmenter.getJiebaSegmenterSingleton(), sentence);
                                         int score = analysis.getEmoScore();
-                                        //Toast.makeText(MainActivity.this, "score: " + score, Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MainActivity.this, "score: " + score, Toast.LENGTH_LONG).show();
                                         if(score > 0)
-
                                             emo.setLabel(getString(R.string.label_positive));
                                         else
                                             emo.setLabel(getString(R.string.label_negative));
